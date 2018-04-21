@@ -1,13 +1,71 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>client</title>
-    <link rel="stylesheet" href="https://gw.alipayobjects.com/as/g/antui/antui/10.1.10/dpl/antui-all.css"/>
-  </head>
-  <body>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-  </body>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  <meta content="telephone=no" name="format-detection" />
+  <meta content="telephone=no,email=no,adress=no" name="format-detection" />
+  <meta name="x5-orientation" content="portrait"/>
+  <meta name="x5-fullscreen" content="true"/>
+  <meta name="x5-page-mode" content="app"/>
+  <meta charset="utf-8">
+  <title>头条</title>
+  <link rel="stylesheet" type="text/css" href="./static/css/reset.css">
+
+
+    <link rel="stylesheet" href="https://at.alicdn.com/t/font_370834_x16j2tb331r4fgvi.css">
+    <script type="text/javascript">
+        (function (doc, win) {
+            var docEl = doc.documentElement,
+                resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+                recalc = function () {
+                    var clientWidth = docEl.clientWidth;
+                    if (!clientWidth) return;
+                    if(clientWidth>=750){
+                        docEl.style.fontSize = '100px';
+                    }else{
+                        docEl.style.fontSize = 100 * (clientWidth / 750) + 'px';
+                    }
+                };
+
+            if (!doc.addEventListener) return;
+            win.addEventListener(resizeEvt, recalc, false);
+            doc.addEventListener('DOMContentLoaded', recalc, false);
+        })(document, window);
+    </script>
+    <style>
+        .loadEffect{
+            position: fixed;
+            left:0;
+            right:0;
+            top:0;
+            bottom: 0;
+            z-index: 999;
+            display: none;
+        }
+        .loadEffect .tips{
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 40%;
+            margin: 0 auto;
+            width: 110px;
+            height: 40px;
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+            line-height: 40px;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<div id="app"></div>
+
+<div class="loadEffect">
+    <div class="tips">正在加载中...</div>
+</div>
+
+<!-- built files will be auto injected -->
+</body>
+
 </html>

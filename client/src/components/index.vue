@@ -1,15 +1,9 @@
 <template>
     <div id="index">
 
-      <!-- <x-header style="background-color: red;">
-          <span>今日头条</span>
-          <x-icon slot="overwrite-left" type="navicon" size="35" style="fill:#fff;position:relative;top:-8px;left:-3px;"></x-icon>
-          <i  class="ion-android-alarm-clock"></i>
-      </x-header> -->
-
         <div class="header-x">
-            <i class="icon iconfont icon-mail_fill" @click="email"></i>
-            <span class="title">今日头条</span>
+            <!-- <i class="icon iconfont icon-mail_fill" @click="email"></i> -->
+            <span class="title">掌趣东林</span>
             <i class="icon iconfont icon-search1" @click="search"></i>
         </div>
 
@@ -91,27 +85,15 @@
     import {ajax} from '../common/js/ajax'
     import BScroll from 'better-scroll'
     import toTop from '../components/toTop'
-    import bottom from '../components/bottom'
     export default {
         name:'index',
         components:{
-            toTop,
-            bottom
+            toTop
         },
         data(){
             return {
                 tab_title:[
-                    {'name':'推荐','key':'__all__'},
-                    {'name':'热点','key':'news_hot'},
-                    {'name':'社会','key':'news_society'},
-                    {'name':'娱乐','key':'news_entertainment'},
-                    {'name':'科技','key':'news_tech'},
-                    {'name':'汽车','key':'news_car'},
-                    {'name':'体育','key':'news_sports'},
-                    {'name':'财经','key':'news_finance'},
-                    {'name':'军事','key':'news_military'},
-                    {'name':'国际','key':'news_world'},
-                    {'name':'时尚','key':'news_fashion'},
+                    {'name':'推荐','key':'__all__'}
                 ],
                 prevkey:'',     //上一个选中的标签
                 isCur:0,        //当前点击的tab页
@@ -305,7 +287,7 @@
             left:0;
             right:0;
             height: 40px;
-            background-color: red;
+            background-color: rgba(23, 139, 223, 1);
             z-index: 999;
             text-align: center;
             .title{
@@ -350,7 +332,7 @@
                     line-height: 0.70rem;
                     float: left;
                     &.active{
-                        color: red;
+                        color: rgba(23, 139, 223, 1);
                     }
                 }
             }

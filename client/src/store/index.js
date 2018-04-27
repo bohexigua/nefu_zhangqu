@@ -10,7 +10,6 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
     state:{
         count:0,
-        collectionNews:[],
         newsArr:[]
     },
     //使用处进行 commit
@@ -18,9 +17,6 @@ const store = new Vuex.Store({
     getters:{
         nowTime(state){
             return new Date() - 0 + '-' + state.count;
-        },
-        getNewsList(state){
-            return state.collectionNews;
         },
         getNewsArr(state){
             return state.newsArr;

@@ -10,17 +10,7 @@ export default {
     decrement (state){
         state.count--;
     },
-    addCollection(state,item){
-        state.collectionNews.push(item);
-        utils.localstorage.savedata('news',state.collectionNews);
-    },
-    initCollection(state,item){
-        state.collectionNews = item;
-    },
     addNewsArr(state,item){
         state.newsArr = item;
-    },
-    reduceCollection(state){
-
     }
 }

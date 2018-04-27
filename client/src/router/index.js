@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import index from '@/components/index'
-import collection from '@/components/collection'
+import campus from '@/components/campus'
 import follow from '@/components/follow'
 import my from '@/components/my'
 import page404 from '@/components/page404'
@@ -23,7 +23,7 @@ export default new Router({
 
 
       {path: '/index', name:'index', component: index},
-      {path: '/collection', name:'collection', component: collection},
+      {path: '/campus', name:'campus', component: campus},
       {path: '/follow', name:'follow', component: follow},
       {path: '/my', name:'my', component: my},
       {path: '/newsDetails/:id', name: 'newsDetails',component:newsDetails },

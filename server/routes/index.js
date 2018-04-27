@@ -1,4 +1,7 @@
 const router = require('koa-router')()
+const campus = require('../controller/campus')
+
+router.get('/getNews', campus.getNews)
 
 router.get('/', async (ctx, next) => {
   await ctx.render('index', {

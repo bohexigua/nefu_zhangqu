@@ -22,6 +22,9 @@
     "pug": "^2.0.0-rc.1"
   },
   "devDependencies": {
-    "nodemon": "^1.8.1"
+    "cheerio": "^1.0.0-rc.2",
+    "mysql-pro": "^1.0.1",
+    "nodemon": "^1.8.1",
+    "request": "^2.85.0"
   }
 }

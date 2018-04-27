@@ -28,7 +28,7 @@ Vue.use(VueLazyload,{
 let history = {
     count:4,    //初识tab切换数量
     '/index':1,
-    '/collection':2,
+    '/campus':2,
     '/follow':3,
     '/my':4
 };

@@ -8,15 +8,15 @@
               </router-link>
           </div>
           <div class="tab-item">
-              <router-link to="/collection">
+              <router-link to="/campus">
                   <div class="icon icon2"></div>
-                  <div class="icon-word">收藏</div>
+                  <div class="icon-word">校园</div>
               </router-link>
           </div>
           <div class="tab-item">
               <router-link to="/follow">
                   <div class="icon icon3"></div>
-                  <div class="icon-word">关注</div>
+                  <div class="icon-word">寻人</div>
               </router-link>
           </div>
           <div class="tab-item">
@@ -49,7 +49,7 @@
           return {
               transitionName:'',
               isBottom:true,
-              bottomArr:['/index','/collection','/follow','/my']
+              bottomArr:['/index','/campus','/follow','/my']
           }
       },
       methods:{

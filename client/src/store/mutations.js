@@ -1,16 +1,30 @@
 /**
  * Created by orange on 2017/8/13.
  */
-import {utils} from '../common/js/utils'
-//全局触发事件
-export default {
+
+ export default {
     increment (state){
-        state.count++;
+			state.count++;
     },
     decrement (state){
-        state.count--;
+			state.count--;
     },
     addNewsArr(state,item){
-        state.newsArr = item;
+			state.newsArr = item;
+    },
+    updateMapInfos(state, payload) {
+			state.mapInfos = payload;
+    },
+    updateNews(state, payload) {
+			let res = [];
+			for(let i = 0; i < payload.news.length; i++) {
+				let item = payload.news[i];
+				res.push({
+					title: item.news_title,
+					date: item.news_date.substring(0, 10),
+					link: item.news_link
+				});
+			}
+			state.campusNews = res;
     }
 }

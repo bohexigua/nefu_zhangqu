@@ -1,4 +1,5 @@
 const Koa = require('koa')
+const cors = require('koa2-cors');
 const app = new Koa()
 const views = require('koa-views')
 const json = require('koa-json')
@@ -8,10 +9,12 @@ const logger = require('koa-logger')
 
 const index = require('./routes/index')
 const users = require('./routes/users')
+const campus = require('./routes/campus')
 
 // error handler
 onerror(app)
 
+app.use(cors())
 // middlewares
 app.use(bodyparser({
   enableTypes:['json', 'form', 'text']
@@ -35,6 +38,7 @@ app.use(async (ctx, next) => {
 // routes
 app.use(index.routes(), index.allowedMethods())
 app.use(users.routes(), users.allowedMethods())
+app.use(campus.routes(), campus.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {

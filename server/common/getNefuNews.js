@@ -11,8 +11,17 @@ const getNefuNews = () => {
 				reject(error);
 			}
 			$ = cheerio.load(body);
+			$firstNews = $('.m-txt1');
 			$newsList = $('.ul-txt1');
+			const firstItem = {
+				title: $firstNews.children('.txt').children('h4').children('a').text(),
+				link: baseURL + $firstNews.children('.txt').children('h4').children('a').attr('href'),
+				time: $firstNews.children('.txt').children('.date').text(),
+				img: baseURL + $firstNews.children('.pic').children('a').children('img').attr('src')
+			};
 			const result = [];
+			console.log(firstItem);
+			result.push(firstItem);
 			const newsLen = $newsList.children().length;
 			for (let i = 0; i < newsLen; i++) {
 				let $item = $newsList.children().eq(i);

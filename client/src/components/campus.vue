@@ -126,7 +126,9 @@
         height: 8px;
         border-radius: 50%;
         background-color: rgba(0, 121, 202, 1);
-        transform: translateY(-4px);
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%);
       }
       .news-item-title {
         display: inline-block;

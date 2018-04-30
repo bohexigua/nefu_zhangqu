@@ -7,6 +7,10 @@ const map_models = require('../models/map');
 const interval = 1000 * 60 * 60 * 6;
 setInterval(getNefuNews, interval);
 
+const getNewsTest = async (ctx, next) => {
+	getNefuNews();
+}
+
 const getNews = async (ctx, next) => {
 	const news = await news_models.getNews();
 	const result = { success: true };
@@ -31,5 +35,6 @@ const getMapInfos = async (ctx, next) => {
 
 module.exports = {
 	getNews: getNews,
-	getMapInfos: getMapInfos
+	getMapInfos: getMapInfos,
+	getNewsTest: getNewsTest
 }

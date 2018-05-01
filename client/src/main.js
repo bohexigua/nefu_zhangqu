@@ -29,7 +29,7 @@ let history = {
     count:4,    //初识tab切换数量
     '/index':1,
     '/campus':2,
-    '/follow':3,
+    '/find':3,
     '/my':4
 };
 //设置初识sessionStorage

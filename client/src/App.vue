@@ -14,7 +14,7 @@
               </router-link>
           </div>
           <div class="tab-item">
-              <router-link to="/follow">
+              <router-link to="/find">
                   <div class="icon icon3"></div>
                   <div class="icon-word">寻人</div>
               </router-link>
@@ -49,7 +49,7 @@
           return {
               transitionName:'',
               isBottom:true,
-              bottomArr:['/index','/campus','/follow','/my']
+              bottomArr:['/index','/campus','/find','/my']
           }
       },
       methods:{

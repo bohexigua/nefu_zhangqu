@@ -13,9 +13,15 @@
       <p class="line"></p>
       <ul class="news_content">
         <li class="news_item" v-for="(item, index) in campusNews" @click="jumpToNews(item.link)">
-          <span class="news-item-seq"></span>
-          <span class="news-item-title">{{ item.title }}</span>
-          <span class="news-item-date">{{ item.date }}</span>
+          <div v-if="index">
+            <span class="news-item-seq"></span>
+            <span class="news-item-title">{{ item.title }}</span>
+            <span class="news-item-date">{{ item.date }}</span>
+          </div>
+          <div v-else>
+            <img :src="item.pic" alt="" class="news-item-pic">
+            <span class="news-item-title">{{ item.title }}</span>
+          </div>
         </li>
       </ul>
     </div>
@@ -107,7 +113,7 @@
     margin-top: 20px;
     box-shadow: 0 -3px 5px rgba(220, 220, 220, 1);
     text-align: center;
-    margin-bottom: 60px;
+    margin-bottom: 80px;
     .news_title {
       height: 40px;
       font-size: 14px;
@@ -120,6 +126,12 @@
     }
     .news_content {
       margin-top: 20px;
+      .news_item {
+        margin-top: 10px;
+      }
+      .news-item-pic {
+        width: 100px;
+      }
       .news-item-seq {
         display: inline-block;
         width: 8px;

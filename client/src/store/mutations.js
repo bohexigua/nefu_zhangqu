@@ -22,7 +22,8 @@
 				res.push({
 					title: item.news_title,
 					date: item.news_date.substring(0, 10),
-					link: item.news_link
+					link: item.news_link,
+					pic: item.news_pic
 				});
 			}
 			state.campusNews = res;

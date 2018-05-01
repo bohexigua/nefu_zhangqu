@@ -5,12 +5,12 @@
 </template>
 <script>
     export default{
-        methods:{
-            reload(){
-                console.log(this.$router);
-                this.$router.push('/')
-            }
-        }
+			methods:{
+				reload() {
+						console.log(this.$router);
+						this.$router.push('/')
+				}
+			}
     }
 </script>
 <style rel="stylesheet/scss" lang="scss">

@@ -5,3 +5,8 @@ const delay = (time = 1000) => {              // 延迟 1 s
     }, time)
   })
 }
+
+
+module.exports = {
+  delay: delay
+}

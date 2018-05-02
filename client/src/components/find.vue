@@ -2,7 +2,7 @@
   <div id="find">
 		<h3 class="find-title"> 寻找你最喜欢的那位 </h3>
 		<article class="find-content">
-			<p> &nbsp;&nbsp;我们提供东北林业大学在校师生的 10000+ 张人脸库，覆盖了2010 - 2014级的全体师生，以及部分 2015级的同学。因训练用户组耗时，全校师生敬请期待。 </p>
+			<p> &nbsp;&nbsp;我们提供东北林业大学在校师生的 18000+ 张人脸库，覆盖了2010 - 2016级的全体师生。 </p>
 			<p> &nbsp;&nbsp;你可以上传你心目中男神女神的模样，寻找一位你最心动的同学。 </p>
 		</article>
 		<div class="upload-wrap">
@@ -193,7 +193,7 @@ export default {
 			margin: 0 auto;
 			margin-top: 20px;
 			width: 340px;
-			height: 600px;
+			height: 520px;
 			overflow: hidden;
 			background-color: rgba(251, 251, 251, 1);
 			margin-bottom: 60px;
@@ -206,7 +206,7 @@ export default {
 			}
 			.result-wrap {
 				margin-top: 25px;
-				height: 550px;
+				height: 480px;
 				display: flex;
 				flex-wrap: wrap;
 				justify-content: space-around;

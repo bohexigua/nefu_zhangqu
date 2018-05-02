@@ -17,10 +17,10 @@
 			</div>
 		</div>
 		<div class="find-result">
-			<p class="result-title"> 搜索结果（召回 5 名最像的同学）: </p>
+			<p class="result-title"> 搜索结果（召回 4 名最像的同学）: </p>
 			<ul class="result-wrap">
 				<li class="result-item" v-for="(item, index) in userList">
-					<div class="item-pic" :style="changeUserImage(item.path)"></div>
+					<div class="item-pic" :style="changeUserImage(item.userNo)"></div>
 					<div class="item-intro">
 						<p> 学号：{{ item.userNo }} </p>
 						<p> 姓名：{{ item.name }} </p>
@@ -54,7 +54,6 @@ export default {
 			showDialog: false,
 			uploadBtnFlag: true,
 			userList: [{path: '', name: '', userNo: '', college: '', score: ''}, 
-			{path: '', name: '', userNo: '', college: '', score: ''}, 
 			{path: '', name: '', userNo: '', college: '', score: ''}, 
 			{path: '', name: '', userNo: '', college: '', score: ''}, 
 			{path: '', name: '', userNo: '', college: '', score: ''}]
@@ -93,9 +92,10 @@ export default {
 			this.uploadBtnFlag = false;
 			document.addEventListener('touchmove', stopTouchMove, false);
 		},
-		changeUserImage(path) {
-			if (path) {
-				return 'background-image: url("../' + path + '")';
+		changeUserImage(studentNo) {
+			if (studentNo) {
+				const path = '../static/student/' + studentNo + '.jpg';
+				return 'background-image: url("' + path + '")';
 			}
 		}
 	}
@@ -193,7 +193,7 @@ export default {
 			margin: 0 auto;
 			margin-top: 20px;
 			width: 340px;
-			height: 400px;
+			height: 600px;
 			overflow: hidden;
 			background-color: rgba(251, 251, 251, 1);
 			margin-bottom: 60px;
@@ -206,15 +206,15 @@ export default {
 			}
 			.result-wrap {
 				margin-top: 25px;
-				height: 350px;
+				height: 550px;
 				display: flex;
 				flex-wrap: wrap;
 				justify-content: space-around;
 				.result-item {
 					width: 100px;
 					height: 140px;
-					margin-left: 5px;
-					margin-right: 5px;
+					margin-left: 10px;
+					margin-right: 10px;
 					.item-pic {
 						width: 100px;
 						height: 100px;

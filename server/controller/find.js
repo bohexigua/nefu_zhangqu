@@ -46,7 +46,7 @@ const recallFace = async (ctx, next) => {
         let userInfo = await campus_model.getUserByNo(item.user_id);
         result.userList.push({
           userNo: userInfo[0].user_no,
-          score: item.score,
+          score: item.score.toFixed(2),
           path: userInfo[0].user_img,
           name: userInfo[0].user_name,
           college: userInfo[0].user_college

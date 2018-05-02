@@ -15,7 +15,7 @@ const requestFace = (imageBase64, accessToken) => {
         image: imageBase64,
         image_type: 'BASE64',
         group_id_list: 'nefu_0',
-        max_user_num: 5
+        max_user_num: 4
       })
     }, async (error, response, body) => {
       if (error) {

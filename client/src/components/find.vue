@@ -1,42 +1,38 @@
 <template>
   <div id="find">
-		<h3 class="find-title"> 寻找你最爱的那位 </h3>
+		<h3 class="find-title"> 寻找你最喜欢的那位 </h3>
 		<article class="find-content">
 			<p> &nbsp;&nbsp;我们提供东北林业大学在校师生的 10000+ 张人脸库，覆盖了2010 - 2014级的全体师生，以及部分 2015级的同学。因训练用户组耗时，全校师生敬请期待。 </p>
-			<p> &nbsp;&nbsp;你可以上传你心目中男神女神的模样，寻找一位你最心动的同学 </p>
+			<p> &nbsp;&nbsp;你可以上传你心目中男神女神的模样，寻找一位你最心动的同学。 </p>
 		</article>
 		<div class="upload-wrap">
-			<p> 点击上传图片 </p>
+			<p> 点击加号上传图片 </p>
 			<img src="../assets/face_diaplay.jpg" alt="">
 			<div class="upload-img">
-				<div class="h-line"></div>
-				<div class="v-line"></div>
+				<div>
+					<div class="h-line"></div>
+					<div class="v-line"></div>
+				</div>
+				<input type="file" name="file" class="upload-input" @change="uploadChange($event)" accept="image/png,image/gif,image/jpg" />
 			</div>
 		</div>
 		<div class="find-result">
-			<p class="result-title"> 搜索结果: </p>
+			<p class="result-title"> 搜索结果（召回 5 名最像的同学）: </p>
 			<ul class="result-wrap">
-				<li class="result-item">
-					<div class="item-pic"></div>
-					<div class="item-intro"></div>
-				</li>
-				<li class="result-item">
-					<div class="item-pic"></div>
-					<div class="item-intro"></div>
-				</li>
-				<li class="result-item">
-					<div class="item-pic"></div>
-					<div class="item-intro"></div>
-				</li>
-				<li class="result-item">
-					<div class="item-pic"></div>
-					<div class="item-intro"></div>
-				</li>
-				<li class="result-item">
-					<div class="item-pic"></div>
-					<div class="item-intro"></div>
+				<li class="result-item" v-for="(item, index) in userList">
+					<div class="item-pic" :style="changeUserImage(item.path)"></div>
+					<div class="item-intro">
+						<p> 学号：{{ item.userNo }} </p>
+						<p> 姓名：{{ item.name }} </p>
+						<p> 学院：{{ item.college }} </p>
+						<p> 相似度：{{ item.score }} </p>
+					</div>
 				</li>
 			</ul>	
+		</div>
+		<div class="loaing-dialog" v-show="showDialog">
+			<img src="../assets/load.gif" alt="" class="loading-icon">
+			<p class="loading-text"> 正在努力加载中 </p>
 		</div>
   </div>
 </template>
@@ -44,13 +40,64 @@
 <script>
 //引入vuex 辅助函数  mapState（计算属性），mapMutations（methods方法）
 import { mapState, mapMutations, mapGetters} from 'vuex'
+import axios from 'axios';
+import { requestURL } from '../common/config'
+
+const stopTouchMove = (event) => {
+	event.preventDefault();
+}
+
 export default {
 	name: 'find',
+	data() {
+		return {
+			showDialog: false,
+			uploadBtnFlag: true,
+			userList: [{path: '', name: '', userNo: '', college: '', score: ''}, 
+			{path: '', name: '', userNo: '', college: '', score: ''}, 
+			{path: '', name: '', userNo: '', college: '', score: ''}, 
+			{path: '', name: '', userNo: '', college: '', score: ''}, 
+			{path: '', name: '', userNo: '', college: '', score: ''}]
+		}
+	},
 	components: {
 	},
 	computed: {
 	},
 	methods: {
+		uploadChange(event) {
+			if (!this.uploadBtnFlag) return;
+			const file = event.target.files[0];
+			if (!/(jpg|png|gif|jpeg)/.test(file.type)) {
+				alert('请上传图片文件!');
+				return ;
+			}
+			const param = new FormData();
+			param.append('file', file, file.name);
+			const config = {  
+				headers: { 'Content-Type':'multipart/form-data' } 
+			};
+			axios.post(requestURL + '/find/recallFace', param, config)
+			.then(res => {
+				this.showDialog = false;
+				this.uploadBtnFlag = true;
+				document.removeEventListener('touchmove', stopTouchMove);
+				if (res.data.success) {
+					this.userList = res.data.userList;
+				} else {
+					alert('图片召回失败，原因：' + res.data.reason);
+				}
+				console.log(res);  
+			});
+			this.showDialog = true;
+			this.uploadBtnFlag = false;
+			document.addEventListener('touchmove', stopTouchMove, false);
+		},
+		changeUserImage(path) {
+			if (path) {
+				return 'background-image: url("../' + path + '")';
+			}
+		}
 	}
 }
 </script>
@@ -58,6 +105,25 @@ export default {
 <style rel="stylesheet/scss" lang="scss">
 	#find {
 		text-align: center;
+		.loaing-dialog {
+			width: 150px;
+			height: 100px;
+			position: absolute;
+			background-color: rgba(0, 0, 0, 0.8);
+			top: 50%;
+			left: 50%;
+			transform: translateX(-50%) translateY(-50%);
+			border-radius: 10px;
+			overflow: hidden;
+			.loading-icon {
+				margin-top: 20px;
+				width: 30px;
+			}
+			.loading-text {
+				margin-top: 10px;
+				color: rgba(255, 255, 255, 0.8);
+			}
+		}
 		.find-title {
 			margin-top: 10px;
 			font-size: 18px;
@@ -110,6 +176,13 @@ export default {
 					border-top-width: 2px;
 				}
 			}
+			.upload-input {
+				display: inline-block;
+				width: 102px;
+				height: 102px;
+				position: absolute;
+				opacity: 0;
+			}
 			> p {
 				font-size: 15px;
 				font-weight: bolder;
@@ -145,13 +218,15 @@ export default {
 					.item-pic {
 						width: 100px;
 						height: 100px;
-						background-color: rgba(0, 0, 0, 1);
+						background-size: 100% 100%;
+						background-repeat: no-repeat;
+						background-image: url('../assets/people.png');
 					}
 					.item-intro {
 						margin-top: 5px;
 						height: 35px;
 						width: 100px;
-						background-color: rgba(0, 0, 0, 1);
+						text-align: left;
 					}
 				}
 			}

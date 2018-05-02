@@ -6,10 +6,12 @@ const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
+const koaBody = require('koa-body');
 
 const index = require('./routes/index')
 const users = require('./routes/users')
 const campus = require('./routes/campus')
+const find = require('./routes/find')
 
 // error handler
 onerror(app)
@@ -27,6 +29,13 @@ app.use(views(__dirname + '/views', {
   extension: 'pug'
 }))
 
+app.use(koaBody({
+  multipart: true,
+  formidable: {
+    maxFileSize: 300 * 1024 * 1024    // 设置上传文件大小最大限制，默认2M
+  }
+}));
+
 // logger
 app.use(async (ctx, next) => {
   const start = new Date()
@@ -39,6 +48,7 @@ app.use(async (ctx, next) => {
 app.use(index.routes(), index.allowedMethods())
 app.use(users.routes(), users.allowedMethods())
 app.use(campus.routes(), campus.allowedMethods())
+app.use(find.routes(), find.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {

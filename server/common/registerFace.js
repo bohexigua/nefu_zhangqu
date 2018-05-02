@@ -48,7 +48,7 @@ const register = (accessToken, imageBase64, studentNo) => {
 const registerFace = async () => {
   return await getAccessToken()
   .then(async accessToken => {
-    for(let i = 9585; i < dirPath.length; i++) {
+    for(let i = 10393; i < dirPath.length; i++) {
       console.log(i);
       let item = dirPath[i];
       if (/\.jpg/.test(item)) {

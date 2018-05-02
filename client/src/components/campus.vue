@@ -41,7 +41,7 @@
         campusNews: s => s.campusNews
       }),
     },
-    data(){
+    data() {
       return {
         posX: 126.634623,
         posY: 45.720335,

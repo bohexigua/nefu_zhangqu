@@ -1,7 +1,8 @@
 const request = require('request');
+const config = require('./config');
 
-const APIKey = 'zm4WEwQGEjUL2oUrVlgiWSnD';
-const secretKey = '6FawiNRKOWNS93z1dm2XM739rYufiVSD';
+const APIKey = config.APIKey;
+const secretKey = config.secretKey;
 const grantType = 'client_credentials';
 let baseURL = 'https://aip.baidubce.com/oauth/2.0/token?';
 baseURL += 'grant_type=' + grantType;

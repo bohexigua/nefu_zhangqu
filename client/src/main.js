@@ -7,6 +7,10 @@ import router from './router'
 //引入 vuex
 import store from './store/'
 import VueLazyload from 'vue-lazyload'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css'
+
+Vue.use(ElementUI)
 
 // 如果 在js 引用静态图片，因为webpack 不会解析 js 文件里的图片，所以要用 import 引用或是把图片放在顶层的 static 目录里
 // import logo from './assets/loading.gif'

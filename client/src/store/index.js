@@ -14,17 +14,34 @@ const store = new Vuex.Store({
 			newsArr:[],
 			mapInfos: [],
 			campusNews: [],
-			session: {}
+			session: {},
+			myMenuList: [{
+				name: '登录',
+				link: '/login',
+				icon: 'icon-login'
+			}, {
+				name: '完善／修改个人资料',
+				link: '/update',
+				icon: 'icon-update'
+			}, {
+				name: '我的消息',
+				link: '/news',
+				icon: 'icon-news'
+			}, {
+				name: '退出',
+				link: '/my',
+				icon: 'icon-exit'
+			}]
     },
     //使用处进行 commit
 		mutations,
 		actions,
     getters:{
 			nowTime(state){
-					return new Date() - 0 + '-' + state.count;
+				return new Date() - 0 + '-' + state.count;
 			},
 			getNewsArr(state){
-					return state.newsArr;
+				return state.newsArr;
 			}
     }
 });

@@ -29,7 +29,20 @@
 			state.campusNews = res;
 		},
 		updateSession(state, payload) {
-			state.session = payload.data;
-			state.session.success = payload.success;
+			if (payload && payload.data) {
+				state.myMenuList.shift();
+				state.session = payload.data;
+				state.session.success = payload.success;
+			}
+		},
+		logout(state, payload) {
+			if (state.myMenuList[0].icon !== 'icon-login') {
+				state.myMenuList.unshift({
+					name: '登录',
+					link: '/login',
+					icon: 'icon-login'
+				});
+			}
+			state.session = {};
 		}
 }

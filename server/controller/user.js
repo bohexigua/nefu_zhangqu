@@ -30,8 +30,7 @@ const login = async (ctx, next) => {
 const getSession = async (ctx, next) => {
   const result = { success: true };
   const session = ctx.session.user;
-  console.log(ctx.session);
-  if (!session.success) {
+  if (session && !session.success) {
     result.success = false;
     result.reason = '您尚未登录或登录失效，请重新登录';
     ctx.response.body = JSON.stringify(result);
@@ -41,7 +40,15 @@ const getSession = async (ctx, next) => {
   ctx.response.body = JSON.stringify(result);
 }
 
+const logout = async (ctx, next) => {
+  ctx.session.user = {};
+  ctx.response.body = JSON.stringify({
+    success: true
+  });
+}
+
 module.exports = {
   login: login,
-  getSession: getSession
+  getSession: getSession,
+  logout: logout
 }

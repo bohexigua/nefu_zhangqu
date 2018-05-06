@@ -27,5 +27,11 @@ export default {
     .then(res => {
       context.commit('updateSession', res.data);
     })
+  },
+  logout(context) {
+    ajax('/users/logout', {}, 'POST')
+    .then(res => {
+      context.commit('logout');
+    })
   }
 }

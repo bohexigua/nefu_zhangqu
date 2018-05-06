@@ -12,6 +12,7 @@ const index = require('./routes/index')
 const users = require('./routes/users')
 const campus = require('./routes/campus')
 const find = require('./routes/find')
+const store = require("./common/store");
 
 // error handler
 onerror(app)
@@ -28,7 +29,8 @@ app.use(logger())
 app.use(require('koa-static')(__dirname + '/public'))
 
 app.use(session({
-  key: "SESSIONID"               //  default "koa:sess"
+  key: "SESSIONID",               //  default "koa:sess"
+  // store: new store()
 }));
 
 app.use(views(__dirname + '/views', {

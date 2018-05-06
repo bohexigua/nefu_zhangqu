@@ -9,7 +9,7 @@
 				</div>
 			</div>
 			<ul class="connect-me">
-				<li v-for="(item, index) in menuList">
+				<li v-for="(item, index) in menuList" @click="onClickMenu(item)">
 					<router-link :to="item.link">
 						<i class="icon iconfont" :class="item.icon"></i>{{ item.name }}
 						<div class="right">
@@ -24,40 +24,34 @@
 
 <script>
     //引入vuex 辅助函数  mapState（计算属性），mapMutations（methods方法）
-    import { mapState,mapMutations,mapGetters } from 'vuex'
+		import { mapState,mapMutations,mapGetters } from 'vuex'
+		
     export default {
-        name:'my',
-        data() {
-					return {
-						menuList: [{
-							name: '登录',
-							link: '/login',
-							icon: 'icon-login'
-						}, {
-							name: '完善／修改个人资料',
-							link: '/update',
-							icon: 'icon-update'
-						}, {
-							name: '我的消息',
-							link: '/news',
-							icon: 'icon-news'
-						}, {
-							name: '退出',
-							link: '/exit',
-							icon: 'icon-exit'
-						}]
-					}
-        },
-        components:{
-        },
-        computed: {
-					...mapState({
-						session: s => s.session
-					}),
-				},
-        methods: {
+			name:'my',
+			data() {
+				return {
 				}
-    }
+			},
+			components:{
+			},
+			computed: {
+				...mapState({
+					session: s => s.session,
+					menuList: s => s.myMenuList
+				}),
+			},
+			methods: {
+				onClickMenu(item) {
+					if (item.icon === 'icon-exit') {
+						if (!this.session.success) {
+							alert('请先登录！');
+							this.$router.push('/login');
+						}
+						this.$store.dispatch('logout');
+					}
+				}
+			}
+		}
 </script>
 
 <style rel="stylesheet/scss" lang="scss">

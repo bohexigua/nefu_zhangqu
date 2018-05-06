@@ -39,7 +39,7 @@
 
 <script>
 //引入vuex 辅助函数  mapState（计算属性），mapMutations（methods方法）
-import { mapState, mapMutations, mapGetters} from 'vuex'
+import { mapState, mapMutations, mapGetters } from 'vuex'
 import axios from 'axios';
 import { requestURL } from '../common/config'
 

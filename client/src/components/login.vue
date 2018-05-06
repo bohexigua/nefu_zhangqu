@@ -13,8 +13,8 @@
     </el-main>
     <el-footer class="footer">
       <div class="btn-group">
-        <el-button type="primary" @click="login">点击登录</el-button>
-        <el-button type="warning" @click="jumpToIndex">返回主页</el-button>
+        <el-button type="primary" class="login-btn" @click="login">点击登录</el-button>
+        <el-button type="warning" class="back-btn" @click="jumpToIndex">返回主页</el-button>
       </div>
     </el-footer>
     <el-alert
@@ -30,6 +30,7 @@
   import { mapState, mapMutations, mapGetters } from 'vuex'
   import { delay } from '../common/util'
   import { ajax } from '../common/request'
+  import axios from 'axios'
 
   export default {
       name:'login',
@@ -47,7 +48,6 @@
       },
       methods:{
         checkUsername() {
-          console.log(this.username);
           if (!/^[0-9]*$/.test(this.username)) {
             this.username = '';
             this.errorText = '学号只能是数字!';
@@ -60,13 +60,11 @@
         login() {
           const username = this.username;
           const password = this.password;
-          ajax('/users/login', {
-            username: username,
-            password: password
-          }, 'post')
+          this.$store.dispatch('getUserInfo', { username, password });
+          this.$router.push({ path: '/my' });
         },
         jumpToIndex() {
-          this.$router.push({ path: '/my' })
+          this.$router.push({ path: '/my' });
         }
       }
   }
@@ -92,6 +90,12 @@
       .btn-group {
         display: inline-block;
         overflow: hidden;
+        .login-btn {
+          margin-right: 40px;
+        }
+        .back-btn {
+          margin-left: 40px;
+        }
       }
     }
   }

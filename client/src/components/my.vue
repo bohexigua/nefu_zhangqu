@@ -5,7 +5,7 @@
 				</div>
 				<div class="avatar-img">
 					<img src="../assets/default_head.png" alt="" class="avatar">
-					<div class="title">{{ name }}</div>
+					<div class="title">{{ session.user_name || '未登录用户' }}</div>
 				</div>
 			</div>
 			<ul class="connect-me">
@@ -24,12 +24,11 @@
 
 <script>
     //引入vuex 辅助函数  mapState（计算属性），mapMutations（methods方法）
-    import {mapState,mapMutations,mapGetters} from 'vuex'
+    import { mapState,mapMutations,mapGetters } from 'vuex'
     export default {
         name:'my',
         data() {
 					return {
-						name: '未登录用户',
 						menuList: [{
 							name: '登录',
 							link: '/login',
@@ -51,10 +50,13 @@
         },
         components:{
         },
-        computed:{
-        },
-        methods:{
-        }
+        computed: {
+					...mapState({
+						session: s => s.session
+					}),
+				},
+        methods: {
+				}
     }
 </script>
 

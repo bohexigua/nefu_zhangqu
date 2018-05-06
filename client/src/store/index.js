@@ -13,7 +13,8 @@ const store = new Vuex.Store({
 			count:0,
 			newsArr:[],
 			mapInfos: [],
-			campusNews: []
+			campusNews: [],
+			session: {}
     },
     //使用处进行 commit
 		mutations,

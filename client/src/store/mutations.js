@@ -27,5 +27,9 @@
 				});
 			}
 			state.campusNews = res;
-    }
+		},
+		updateSession(state, payload) {
+			state.session = payload.data;
+			state.session.success = payload.success;
+		}
 }

@@ -18,7 +18,7 @@ const setNews = async (news) => {      // 插入新闻
 
 const getNews = async () => {     // 取新闻
   await client.startTransaction();
-  const sql = 'select * from news order by news_date desc Limit 0,6'
+  const sql = 'select * from news order by news_date desc, news_pic desc Limit 0,6'
   const res = await client.executeTransaction(sql, []);
   await client.stopTransaction();
   return res;

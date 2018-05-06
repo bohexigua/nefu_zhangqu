@@ -24,8 +24,10 @@
     "pug": "^2.0.0-rc.1"
   },
   "devDependencies": {
+    "async-each": "^1.0.1",
     "cheerio": "^1.0.0-rc.2",
     "koa-body": "^2.5.0",
+    "koa-session2": "^2.2.6",
     "mysql-pro": "^1.0.1",
     "nodemon": "^1.8.1",
     "request": "^2.85.0"

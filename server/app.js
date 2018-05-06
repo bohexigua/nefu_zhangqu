@@ -6,7 +6,7 @@ const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
-const koaBody = require('koa-body');
+const session = require("koa-session2");
 
 const index = require('./routes/index')
 const users = require('./routes/users')
@@ -16,7 +16,9 @@ const find = require('./routes/find')
 // error handler
 onerror(app)
 
-app.use(cors())
+app.use(cors({
+  credentials: true
+}))
 // middlewares
 app.use(bodyparser({
   enableTypes:['json', 'form', 'text']
@@ -25,16 +27,13 @@ app.use(json())
 app.use(logger())
 app.use(require('koa-static')(__dirname + '/public'))
 
+app.use(session({
+  key: "SESSIONID"               //  default "koa:sess"
+}));
+
 app.use(views(__dirname + '/views', {
   extension: 'pug'
 }))
-
-app.use(koaBody({
-  multipart: true,
-  formidable: {
-    maxFileSize: 300 * 1024 * 1024    // 设置上传文件大小最大限制，默认2M
-  }
-}));
 
 // logger
 app.use(async (ctx, next) => {

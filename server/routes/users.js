@@ -11,6 +11,8 @@ router.get('/bar', function (ctx, next) {
   ctx.body = 'this is a users/bar response'
 })
 
-router.get('/login', user.login)
+router.post('/login', user.login)
+
+router.post('/getSession', user.getSession)
 
 module.exports = router

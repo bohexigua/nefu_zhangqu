@@ -5,4 +5,6 @@ router.prefix('/issue')
 
 router.post('/setIssue', issue.setIssue)
 
+router.get('/getIssue', issue.getIssue)
+
 module.exports = router

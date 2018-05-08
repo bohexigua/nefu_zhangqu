@@ -75,7 +75,7 @@
             if (res.data.success) {
               alert('动态发表成功，3s后自动跳回首页');
               delay(3000).then(() => {
-                this.$router.push({ path: '/my' });
+                this.$router.push({ path: '/index' });
               })
             } else {
               alert(res.data.reason)

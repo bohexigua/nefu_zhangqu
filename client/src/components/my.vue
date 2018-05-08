@@ -4,7 +4,7 @@
 				<div class="background">
 				</div>
 				<div class="avatar-img">
-					<img src="../assets/default_head.png" alt="" class="avatar">
+					<img :src="user_pic" alt="" class="avatar">
 					<div class="title">{{ session.user_name || '未登录用户' }}</div>
 				</div>
 			</div>
@@ -23,35 +23,44 @@
 </template>
 
 <script>
-    //引入vuex 辅助函数  mapState（计算属性），mapMutations（methods方法）
-		import { mapState,mapMutations,mapGetters } from 'vuex'
-		
-    export default {
-			name:'my',
-			data() {
-				return {
+	//引入vuex 辅助函数  mapState（计算属性），mapMutations（methods方法）
+	import { mapState,mapMutations,mapGetters } from 'vuex'
+	
+	export default {
+		name:'my',
+		data() {
+			return {
+				user_pic: 'static/img/default_head.png'
+			}
+		},
+		components:{
+		},
+		computed: {
+			...mapState({
+				session: s => s.session,
+				menuList: s => s.myMenuList
+			}),
+		},
+		watch: {
+			session(val) {
+				if (val.success && val.user_no) {
+					this.user_pic = 'static/student/' + val.user_no + '.jpg';
 				}
-			},
-			components:{
-			},
-			computed: {
-				...mapState({
-					session: s => s.session,
-					menuList: s => s.myMenuList
-				}),
-			},
-			methods: {
-				onClickMenu(item) {
-					if (item.icon === 'icon-exit') {
-						if (!this.session.success) {
-							alert('请先登录！');
-							this.$router.push('/login');
-						}
-						this.$store.dispatch('logout');
+			}
+		},
+		methods: {
+			onClickMenu(item) {
+				if (item.icon === 'icon-exit') {
+					if (!this.session.success) {
+						alert('请先登录！');
+						this.$router.push('/login');
 					}
+					this.$store.dispatch('logout');
+					this.user_pic = 'static/img/default_head.png';
 				}
 			}
 		}
+	}
 </script>
 
 <style rel="stylesheet/scss" lang="scss">
@@ -82,8 +91,7 @@
 					width: 100px;
 					margin: 0 auto;
 					img{
-						width: 100%;
-						border-radius: 50%;
+						width: 80%;
 						margin-top: 50px;
 					}
 					.title{
@@ -125,7 +133,7 @@
 						.icon-update {
 							background-image: url('../assets/update.png');
 						}
-						.icon-news {
+						.icon-issue {
 							background-image: url('../assets/news.png');
 						}
 						.icon-exit {

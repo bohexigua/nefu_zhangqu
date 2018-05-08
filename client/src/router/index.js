@@ -8,7 +8,7 @@ import page404 from '@/components/page404'
 import search from '@/components/search'
 import login from '@/components/login'
 import update from '@/components/update'
-import news from '@/components/news'
+import issue from '@/components/issue'
 
 Vue.use(Router)
 
@@ -31,7 +31,7 @@ export default new Router({
       {path: '/search', name: 'seach',component: search },
       {path: '/login', name: 'login', component: login},
       {path: '/update', name: 'update', component: update},
-      {path: '/news', name: 'news', component: news},
+      {path: '/issue', name: 'issue', component: issue},
 
       {path: '*',component: page404},   //当匹配不到合适的路由会跳转到 404 页面
       {path: '/',redirect: '/index'},   // 跳转路由，默认显示路由页面

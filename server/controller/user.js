@@ -1,4 +1,5 @@
 const user_model = require('../models/user');
+const userInfo_model = require('../models/userInfo');
 
 const login = async (ctx, next) => {
   const form = ctx.request.body;
@@ -47,8 +48,24 @@ const logout = async (ctx, next) => {
   });
 }
 
+const updateUserInfo = async (ctx, next) => {
+  const form = ctx.request.body;
+  const username = form.username;
+  const password = form.password;
+  const telephone = form.telephone;
+  const email = form.email;
+  const userInfo = await userInfo_model.updateUserInfo(username, password, telephone, email);
+  const result = { success: true };
+  if (! (userInfo.res1.affectedRows && userInfo.res2.affectedRows) ) {
+    result.success = false;
+    result.reason = '信息完善失败，请重试';
+  }
+  ctx.response.body = JSON.stringify(result);
+}
+
 module.exports = {
   login: login,
   getSession: getSession,
-  logout: logout
+  logout: logout,
+  updateUserInfo: updateUserInfo
 }

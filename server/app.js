@@ -12,6 +12,7 @@ const index = require('./routes/index')
 const users = require('./routes/users')
 const campus = require('./routes/campus')
 const find = require('./routes/find')
+const issue = require('./routes/issue')
 const store = require("./common/store");
 
 // error handler
@@ -50,6 +51,7 @@ app.use(index.routes(), index.allowedMethods())
 app.use(users.routes(), users.allowedMethods())
 app.use(campus.routes(), campus.allowedMethods())
 app.use(find.routes(), find.allowedMethods())
+app.use(issue.routes(), issue.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {

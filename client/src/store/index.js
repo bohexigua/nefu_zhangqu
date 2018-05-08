@@ -24,9 +24,9 @@ const store = new Vuex.Store({
 				link: '/update',
 				icon: 'icon-update'
 			}, {
-				name: '我的消息',
-				link: '/news',
-				icon: 'icon-news'
+				name: '匿名／实名交流',
+				link: '/issue',
+				icon: 'icon-issue'
 			}, {
 				name: '退出',
 				link: '/my',
@@ -36,11 +36,11 @@ const store = new Vuex.Store({
     //使用处进行 commit
 		mutations,
 		actions,
-    getters:{
-			nowTime(state){
+    getters: {
+			nowTime(state) {
 				return new Date() - 0 + '-' + state.count;
 			},
-			getNewsArr(state){
+			getNewsArr(state) {
 				return state.newsArr;
 			}
     }

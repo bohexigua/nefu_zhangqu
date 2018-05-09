@@ -118,7 +118,7 @@ import { utils } from '../common/js/utils'
             width: 100%;
             position: fixed;
             top: 0;
-            background-color: red;
+            background-color: rgba(23, 139, 223, 1);
             z-index: 3;
             .vux-header-left .vux-header-back {
                 color: #fff;

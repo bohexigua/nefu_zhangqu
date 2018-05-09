@@ -34,31 +34,31 @@
 					<!--嵌套路由设置-->
 				<!--:to = "'index/newsDetails' + item.source_url"-->
 
-				<router-link class="news-item" v-for="(item,index) in newsData"
+				<div class="news-item" v-for="(item,index) in newsData"
+					tag='li'
+					:key='index'
+				>
+					<router-link class="news-title" 
 					:to ='{
 						path: "/newsDetails" + item.source_url,
 						query:{
 							newsItem:JSON.stringify(item)
 						}
 					}'
-
-					tag='li'
-					:key='index'
-				>
-
-					<div class="news-title" v-html="item.content"></div>
-					<ul class="img-wrapper" v-if="item.image_list">
+					v-html="item.content"></router-link>
+					<!-- <ul class="img-wrapper" v-if="item.image_list">
 						<li v-for="(item,index) in item.image_list">
-							<!-- :src="item['url']" -->
 							<img v-lazy="item['url']"  alt="">
 						</li>
-					</ul>
+					</ul> -->
 					<div class="bottom-title">
 						<span class="writer">{{ item.username }}</span> &nbsp;&nbsp;
-						<span class="sex-icon" :class="{ 'women-icon': item.sex === 1, 'man-icon': item.sex === 2 }">{{ item.comment_count }}</span>
+						<span class="icon" :class="{ 'women-icon': item.sex === 1, 'man-icon': item.sex === 2 }">{{ item.comment_count }}</span>
 						<span class="datetime">{{ item.date }}</span>
+						<span class="praise-icon icon" @click="onAddPraise(item.issueID, index)"></span>
+						<span class="praise-num"> {{ item.praise }} </span>
 					</div>
-				</router-link>
+				</div>
 
 				<!-- 上拉加载 -->
 				<div class="loading2" v-show="loadingShow2">
@@ -83,9 +83,11 @@
 	import BScroll from "better-scroll";
 	import toTop from "../components/toTop";
 	import { formatDate, delay } from '../common/util'
+	import { mapState, mapMutations, mapGetters } from 'vuex'
 
 	export default {
 		name: "index",
+
 		components: {
 			toTop
 		},
@@ -104,6 +106,11 @@
 				newsArr: [] 																		//存储在 vuex 里面的数据
 			};
 		},
+		computed: {
+			...mapState({
+				session: s => s.session,
+			})
+		},
 		methods: {
 			search() {
 				console.log("search");
@@ -111,7 +118,7 @@
 				this.$router.push("/search");
 			},
 
-			request(key, fn) {
+			request(fn) {
 				ajax('/issue/getIssue')
 				.then(res => {
 					const newsData = res.data.data.map((value, index, arr) => {
@@ -125,6 +132,7 @@
 						result.praise = value.issue_praise;
 						result.sex = value.user_sex;
 						result.content = value.issue_content;
+						result.issueID = value.issue_id;
 						return result;
 					});
 					this.newsData = newsData;
@@ -132,6 +140,22 @@
 						this.news_scroll && this.news_scroll.refresh();
 						fn && fn();
 					});
+				})
+			},
+
+			onAddPraise(id, index) {
+				if (!this.session.success) {
+					this.$router.push('/login');
+				}
+				ajax('/issue/addPraise', {
+					issueID: id
+				}, 'POST')
+				.then(res => {
+					if (res.data.success) {
+						this.newsData[index].praise += 1;
+					} else {
+						alert(res.data.reason);
+					}
 				})
 			},
 
@@ -160,15 +184,6 @@
 				this.newsData = this.newsData.concat(newsdata);
 			},
 
-			highlight(index) {
-				//阻止pc 端，点击事件执行多次，（不是自己派发的事件，return）
-				//点击事件是靠 better-scroll 派发的
-				if (!event._constructed) return;
-				this.isCur = index;
-				this.tabkey = this.tab_title[index]["key"];
-				console.log(this.tabkey, "我执行的次数");
-				this.request(this.tabkey);
-			},
 			//初始化 better-scroll
 			_initScroll() {
 				let self = this;
@@ -208,7 +223,7 @@
 					if (flagdown) {
 						console.log("flagdown");
 						flagdown = false;
-						self.request(self.tabkey, function() {
+						self.request(() => {
 							self.loadingShow = false;
 						});
 					}
@@ -217,13 +232,6 @@
 					if (flagup) {
 						console.log("flagup");
 						flagup = false;
-						ajax(self.tabkey, function(data) {
-							//                            self.newsData = self.newsData.concat(data.data);
-							self.saveStore(data.data);
-							self.$nextTick(() => {
-								self.loadingShow2 = false;
-							});
-						});
 					}
 				});
 			},
@@ -258,8 +266,7 @@
 			$route(to, from, next) {}
 		},
 		created() {
-			let key0 = this.tab_title[0]["key"];
-			this.request(key0);
+			this.request();
 		},
 		mounted() {
 			this._initScroll();
@@ -376,7 +383,7 @@
 						font-size: 10px;
 						color: #b5b5b5;
 						margin-top: 8px;
-						.sex-icon {
+						.icon {
 							display: inline-block;
 							width: 15px;
 							height: 15px;
@@ -392,6 +399,19 @@
 						}
 						.datetime {
 							margin-left: 10px;
+						}
+						.praise-icon {
+							width: 20px;
+							height: 20px;
+							margin-left: 50px;
+							background-image: url('../assets/praise.png');
+						}
+						.praise-num {
+							display: inline-block;
+							color: rgba(0, 0, 0, 0.5);
+							font-size: 14px;
+							font-weight: bold;
+							margin-left: 1px;
 						}
 					}
 				}

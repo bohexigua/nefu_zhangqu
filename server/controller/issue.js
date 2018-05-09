@@ -69,7 +69,11 @@ const addIssuePv = async (ctx, next) => {
 }
 
 const getComment = async (ctx, next) => {
-
+  const issueID = ctx.request.query.issueID;
+  const res = await comment_models.getComment(issueID);
+  const result = { success: true }
+  result.data = res;
+  ctx.response.body = JSON.stringify(result);
 }
 
 module.exports = {

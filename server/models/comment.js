@@ -1,13 +1,13 @@
 const client = require("./mysql");
 
-const setIssue = async (username, content, anonymous) => {     
+const getComment = async (issueID) => {     
   await client.startTransaction();
-  const sql = 'INSERT INTO issue (issue_id, issue_content, issue_anonymous, issue_user, issue_date) VALUES (null, ?, ?, ?, now())';
-  const res = await client.executeTransaction(sql, [content, anonymous, username]);
+  const sql = 'select c.*, ci.user_name, ci.user_college from comment c, campus_info ci where c.comment_user = ci.user_no and c.issue_id = ?';
+  const res = await client.executeTransaction(sql, [issueID]);
   await client.stopTransaction();
   return res;
 }
 
 module.exports = {
-  setIssue: setIssue
+  getComment: getComment
 }

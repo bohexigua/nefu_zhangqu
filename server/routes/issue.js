@@ -11,4 +11,6 @@ router.post('/addPraise', issue.addPraise)
 
 router.get('/addIssuePv', issue.addIssuePv)
 
+router.get('/getComment', issue.getComment)
+
 module.exports = router

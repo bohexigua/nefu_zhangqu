@@ -11,19 +11,12 @@
 		<el-main class="main">
 			<div class="news-content" v-html="newsItem.content"></div>
 			<ul class="comment-wrap">
-				<li class="comment-item">
+				<li class="comment-item" v-for="(item, index) in commentList">
 					<p class="comment-user">
-						<img src="../assets/default_head.png" class="user-pic">
-						<span class="user-name">王小欠</span>
+						<img :src="changeUserPic(item)" class="user-pic">
+						<span class="user-name"> {{ item.name }} </span>
 					</p>
-					<p class="item-content">我是一个评论</p>
-				</li>
-				<li class="comment-item">
-					<p class="comment-user">
-						<img src="../assets/default_head.png" class="user-pic">
-						<span class="user-name">王小欠</span>
-					</p>
-					<p class="item-content">我是一个评论</p>
+					<p class="item-content"> {{ item.comment_content }} </p>
 				</li>
 			</ul>
 		</el-main>
@@ -47,7 +40,14 @@
 	const getComment = async (issueID, self) => {
 		ajax('/issue/getComment?issueID=' + issueID)
 		.then(res => {
-			console.log(res);
+			self.commentList = res.data.data;
+			for (let i = 0; i < self.commentList.length; i++) {
+				if (self.newsItem.anonymous === 1) {						//   匿名
+					self.commentList[i].name = '某' + self.commentList[i].user_college + '同学';
+				} else {
+					self.commentList[i].name = self.commentList[i].user_name;
+				}
+			}
 		});
 	}
 
@@ -57,7 +57,8 @@
 		data() {
 			return {
 				newsItem: {},
-				commentContent: ''
+				commentContent: '',
+				commentList: []
 			};
 		},
 		created() {
@@ -72,7 +73,13 @@
 				this.$router.push('/index');
 			},
 			publishComment() {
-
+			},
+			changeUserPic(item) {
+				if (this.newsItem.anonymous === 1) {
+					return 'static/img/default_head.png';
+				} else {
+					return 'static/student/' + item.comment_user + '.jpg';
+				}
 			}
 		},
 		watch: {

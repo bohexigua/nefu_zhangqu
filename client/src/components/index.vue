@@ -111,6 +111,7 @@
 						} else {
 							result.username = value.user_name;
 						}
+						result.anonymous = value.issue_anonymous;
 						result.date = formatDate(value.issue_date)
 						result.praise = value.issue_praise;
 						result.sex = value.user_sex;

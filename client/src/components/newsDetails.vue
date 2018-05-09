@@ -1,283 +1,181 @@
 <template>
-    <div id="newsDetails">
-
-
-        <x-header>
-            <span>新闻详情</span>
-            <i class="icon iconfont icon-share3" @click="share"></i>
-        </x-header>
-
-        <div class="bg-img" v-if="newShow==1">
-            <img src="../assets/bg.png" alt="" class="">
-        </div>
-
-        <article class="newsInfo" v-if="newShow==2">
-            <div class="title">{{ newsInfo.title }}</div>
-            <div class="aticle_author" v-if="newsInfo.media_user">
-                <a href="">
-                    <div class="avatar">
-                        <img :src="newsInfo.media_user.avatar_url" alt="">
-                    </div>
-                </a>
-                <div class="author-info">
-                    <span class="author-name">{{newsInfo.media_user.screen_name}}</span>
-                    <img src="https://s3b.pstatp.com/growth/mobile_detail/image/toutiaohao_tag_bc28ef080879ea46945f90a280f66c28.svg" alt="">
-                    <div class="time">{{newsInfo.publish_time | formatTime}}</div>
-                </div>
-
-                <div class="gz" @click="collection">
-                    <span v-if="!isCollection">收藏</span>
-                    <span v-if="isCollection">取消收藏</span>
-                </div>
-
-            </div>
-            <div class="news-content" v-html = "newsInfo.content" ref="news_content"></div>
-        </article>
-        <!-- 展开全文 -->
-        <div class="unfold-field" @click="unfold_field" ref="unfold_field">
-            <div class="unfold-field-mask"></div>
-            <div>展开全文<i class="icon iconfont icon-unfold"></i></div>
-        </div>
-
-        <!--分享组件   -->
-        <share v-on:hideShare="hide_Share" :isShow="isShare" v-show="isShare"></share>
-
-    </div>
-
+	<el-container id="newsDetails">
+		<div class="title-bar">
+			<span class="back" @click="onBackToIndex"></span>
+			<span class="title-text"> 动态详情 </span>
+		</div>
+		<el-header class="news-header">
+			<div class="news-author"> {{ newsItem.username }} </div>
+			<div class="news-date"> {{ newsItem.date }} </div>
+		</el-header>
+		<el-main class="main">
+			<div class="news-content" v-html="newsItem.content"></div>
+			<ul class="comment-wrap">
+				<li class="comment-item">
+					<p class="comment-user">
+						<img src="../assets/default_head.png" class="user-pic">
+						<span class="user-name">王小欠</span>
+					</p>
+					<p class="item-content">我是一个评论</p>
+				</li>
+				<li class="comment-item">
+					<p class="comment-user">
+						<img src="../assets/default_head.png" class="user-pic">
+						<span class="user-name">王小欠</span>
+					</p>
+					<p class="item-content">我是一个评论</p>
+				</li>
+			</ul>
+		</el-main>
+		<div class="input-wrap">
+			<el-input v-model="commentContent" placeholder="匿／实名消息，匿／实名评论" class="publish-input"></el-input>
+			<el-button type="primary" class="publish-btn" @click="publishComment">发布</el-button>
+		</div>
+	</el-container>
 </template>
 <script>
-import { XHeader, Actionsheet, TransferDom, ButtonTab, ButtonTabItem } from 'vux'
-import { ajax2 } from '../common/js/ajax'
-import { utils } from '../common/js/utils'
-import share from '../components/share.vue'
-import {mapState,mapMutations,mapGetters} from 'vuex'
+	import { mapState, mapMutations, mapGetters } from "vuex";
+	import { ajax } from '../common/request'
 
+	const logPv = async (issueID) => {
+		ajax('/issue/addIssuePv?issueID=' + issueID)
+		.then(res => {
+			console.log(res);
+		});
+	}
 
-    export default{
-        // props:['newsItem'],
-        components:{
-            XHeader,
-            Actionsheet,
-            TransferDom,
-            ButtonTab,
-            ButtonTabItem,
-            share
-        },
-        data(){
-            return {
-                newsItem:{},
-                newsInfo:{},
-                souceUrl:this.$route.params.id,
-                newitem:{},
-                newShow:1,             //新闻详情展示
-                isShare:false,        //分享组件
-                isCollection:false
-            }
-        },
-        created(){
+	const getComment = async (issueID, self) => {
+		ajax('/issue/getComment?issueID=' + issueID)
+		.then(res => {
+			console.log(res);
+		});
+	}
 
-        },
-        mounted(){
-            this.requestInfo();
-        },
-        methods:{
-            requestInfo(){
-                if(this.souceUrl){
-                    var url = 'https://m.toutiao.com/' + this.souceUrl + '/info/';
-                    let self = this;
-                    ajax2(url,function(data){
-                        self.newsInfo = data.data;
-                        self.newShow = 2;
-                    },function(msg){
-                        alert(msg);
-                    })
-                }else{
-                    console.log('离开本页，不执行请求！');
-                }
-            },
+	export default {
+		components: {
+		},
+		data() {
+			return {
+				newsItem: {},
+				commentContent: ''
+			};
+		},
+		created() {
+		},
+		mounted() {
+			this.newsItem = JSON.parse(this.$route.query.item);	
+			logPv(this.newsItem.issueID);
+			getComment(this.newsItem.issueID, this);
+		},
+		methods: {
+			onBackToIndex() {
+				this.$router.push('/index');
+			},
+			publishComment() {
 
-            //点击展开全文
-            unfold_field(){
-                this.$refs.news_content.style.height = 'auto';
-                this.$refs.unfold_field.style.display = 'none';
-            }
-            ,share(){
-                this.isShare = true;
-                document.getElementsByTagName('body')[0].style.overflow = 'hidden';
-            }
-            ,hide_Share(){
-                this.isShare = false;
-            }
-            ,collection(){
-                console.log('收藏');
-                if(!this.isCollection){
-                    console.log(this.newitem.item_id);
-                    this.$store.commit('addCollection',this.newitem);
-                    this.isCollection = !this.isCollection;
-                }else{
-
-                }
-            }
-        },
-        watch:{
-            '$route'(){
-                this.$refs.news_content.style.height = '800px';
-                this.$refs.unfold_field.style.display = 'block';
-                document.getElementsByTagName('body')[0].style.overflow = 'auto';
-            }
-        },
-        filters:{
-            formatTime(time){
-                utils.dateFormat();
-                let time1 = time + '000';
-                let time2 = new Date(parseInt(time1));
-                let time3 = time2.format('MM-dd hh:mm:ss');
-                return time3;
-            }
-        },
-        activated(){
-            this.souceUrl = this.$route.params.id;
-            this.newitem = JSON.parse(this.$route.query.newsItem);
-            this.requestInfo();
-            this.isCollection = false;
-        },
-        updated(){
-
-//            console.log(this.$store.state.newsArr);
-//            this.$store.state.newsArr.forEach( (item,index) => {
-//                if( item.item_id === this.newitem.item_id){
-//                    let flag = item.collectionFlag;
-//                    if(flag){
-//                        this.isCollection = true;
-//                    }else{
-//                        this.isCollection = false;
-//                    }
-//                }
-//            })
-        }
-    }
+			}
+		},
+		watch: {
+			$route(val) {
+				if (val.query && val.query.item) {
+					this.newsItem = JSON.parse(val.query.item);
+					logPv(this.newsItem.issueID);
+					getComment(this.newsItem.issueID, this);
+				}
+			}
+		},
+		filters: {
+			
+		},
+		activated() {
+		},
+		updated() {
+		}
+	};
 </script>
 <style rel="stylesheet/scss" lang="scss">
-    #newsDetails{
-        width: 100%;
-        background-color: #FFF;
-        z-index: 999;
-        /*position: relative;*/
-        position: absolute;
-        top:0;
-        .vux-header{
-            width: 100%;
-            position: fixed;
-            top: 0;
-            background-color: red;
-            z-index: 3;
-            .vux-header-left .vux-header-back{
-                color: #fff;
-            }
-            .vux-header-left .left-arrow:before{
-                border: 1px solid #fff;
-                border-width: 1px 0 0 1px;
-            }
-            .icon-share3{
-                font-size: 28px;
-                position: absolute;
-                right:10px;
-            }
-        }
-        .bg-img{
-            background-color: #fff;
-            width: 100%;
-            position: absolute;
-            top: 46px;
-            z-index: 1;
-            img{
-                width: 100%;
-            }
-        }
-
-        .newsInfo{
-            padding: 46px 17px 0 17px;
-            margin-top: 12px;
-            font-size: 16px;
-            background-color: #fff;
-            .title{
-                font-size: 0.48rem;
-                line-height: 0.68rem;
-            }
-            .aticle_author{
-                display: flex;
-                align-items: center;
-                margin: 10px 0;
-                .avatar{
-                    height: 36px;
-                    width: 36px;
-                    border: none;
-                    // position: relative;
-                    img{
-                        width: 100%;
-                        height:100%;
-                        border-radius: 50%;
-                    }
-                }
-                .author-info{
-                    flex: 1;
-                    font-size: 12px;
-                    padding-left: 10px;
-                    color: #948d8d;
-                    .author-name{
-                        font-size: 14px;
-                        line-height: 16px;
-                    }
-                    img{
-                        padding-left: 5px;
-                        height: 16px;
-                        margin-bottom: -3px;
-                    }
-                    .time{
-                        line-height: 18px;
-                    }
-                }
-                .gz{
-                    background-color: #2a90d7;
-                    display: block;
-                    text-align: center;
-                    color: hsla(0,0%,100%,.96);
-                    box-sizing: border-box;
-                    width: 72px;
-                    height: 29px;
-                    line-height: 29px;
-                    font-size: 14px;
-                    border-radius: 6px;
-                }
-            }
-            .news-content{
-                margin-top: 10px;
-                color: #333;
-                font-size: 0.36rem;
-                line-height: 0.60rem;
-                height: 800px;
-                overflow: hidden;
-                p{
-                    margin:5px 0;
-                }
-                img{
-                    width: 100%;
-                }
-            }
-        }
-        .unfold-field{
-            padding: 15px 0 ;
-            box-shadow: 0 0 10px #ccc;
-            text-align: center;
-            color: #406599;
-            position: relative;
-            .unfold-field-mask{
-                position: absolute;
-                top: -38px;
-                height: 38px;
-                width: 100%;
-                background-image: linear-gradient(-180deg,hsla(0,0%,100%,0),#fff);
-            }
-        }
-    }
+	#newsDetails {
+		.title-bar {
+			width: 100%;
+			height: 35px;
+			overflow: hidden;
+			background-color: rgba(23, 139, 223, 1);
+			display: flex;
+			align-items: center;
+			.back {
+				display: inline-block;
+				background-repeat: no-repeat;
+				background-size: 100% 100%;
+				width: 20px;
+				height: 20px;
+				background-image: url('../assets/back.png');
+				margin-left: 10px;
+			}
+			.title-text {
+				color: rgba(255, 255, 255, 1);
+				position: absolute;
+				left: 50%;
+				transform: translateX(-50%);
+			}
+		}
+		background-color: rgba(200, 200, 200, 0.1);
+		.news-header {
+			margin-top: 20px;
+			.news-author {
+				color: rgba(0, 0, 0, 0.5);
+				float: left;
+			}
+			.news-date {
+				color: rgba(0, 0, 0, 0.5);
+				float: right;
+			}
+		}
+		.main {
+			padding: 0;
+			.news-content {
+				line-height: 20px;
+				padding-left: 20px;
+				padding-right: 20px;
+			}
+			.comment-wrap {
+				padding-left: 20px;
+				padding-right: 20px;
+				margin-top: 40px;
+				background-color: rgba(255, 255, 255, 1);
+				.comment-item {
+					border-top: 1px solid rgba(0, 0, 0, 0.3);
+					padding-top: 15px;
+					padding-bottom: 15px;
+					.comment-user {
+						.user-pic {
+							height: 40px;
+						}
+						.user-name {
+							display: inline-block;
+							margin-left: 10px;
+							transform: translateY(-20px);
+						}
+					}
+					.item-content {
+						padding-left: 50px;
+					}
+				}
+			}
+		}
+		.input-wrap {
+			position: fixed;
+			bottom: 3px;
+			height: 38px;
+			width: 100%;
+			.publish-input {
+				margin-left: 3px;
+				width: 80%;
+			}
+			.publish-btn {
+				position: absolute;
+				top: 0;
+				right: 0;
+			}
+		}
+	}
 </style>

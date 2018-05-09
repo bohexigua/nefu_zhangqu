@@ -1,5 +1,7 @@
 const issue_models = require('../models/issue');
 const praise_models = require('../models/praise');
+const issuePv_models = require('../models/issuePv');
+const comment_models = require('../models/comment');
 
 const setIssue = async (ctx, next) => {
   const form = ctx.request.body;
@@ -47,8 +49,33 @@ const addPraise = async (ctx, next) => {
   ctx.response.body = JSON.stringify(result);
 }
 
+const addIssuePv = async (ctx, next) => {
+  const result = { success: true };
+  if (!ctx.session.user) {
+    result.success = false;
+    result.reason = '用户未登录，无法统计 pv';
+    ctx.response.body = JSON.stringify(result);
+    return;
+  }
+  const session = ctx.session.user;
+  const issueID = ctx.request.query.issueID;
+  const username = session.user_no;
+  const res = await issuePv_models.setIssuePv(username, issueID);
+  if (!res.affectedRows) {
+    result.success = false;
+    result.reason = '未知错误，无法统计 pv';
+  }
+  ctx.response.body = JSON.stringify(result);
+}
+
+const getComment = async (ctx, next) => {
+
+}
+
 module.exports = {
   setIssue: setIssue,
   getIssue: getIssue,
-  addPraise: addPraise
+  addPraise: addPraise,
+  addIssuePv: addIssuePv,
+  getComment: getComment
 }

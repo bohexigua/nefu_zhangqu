@@ -9,6 +9,7 @@ import search from '@/components/search'
 import login from '@/components/login'
 import update from '@/components/update'
 import issue from '@/components/issue'
+// import newsDetails from '@/components/newsDetails'
 
 Vue.use(Router)
 
@@ -27,7 +28,7 @@ export default new Router({
       {path: '/campus', name:'campus', component: campus},
       {path: '/find', name:'find', component: find},
       {path: '/my', name:'my', component: my},
-      {path: '/newsDetails/:id', name: 'newsDetails',component: newsDetails },
+      {path: '/newsDetails', name: 'newsDetails',component: newsDetails },
       {path: '/search', name: 'seach',component: search },
       {path: '/login', name: 'login', component: login},
       {path: '/update', name: 'update', component: update},

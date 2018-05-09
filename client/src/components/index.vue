@@ -22,35 +22,18 @@
 					<img src="../assets/loading.gif" alt="">
 				</div>
 
-				<!--路由参数设置-->
-				<!--:to="{-->
-				<!--name:'newsDetails',-->
-				<!--path:'/newsDetails',-->
-				<!--params:{-->
-				<!--id:item.source_url,-->
-				<!--newsItem:item-->
-				<!--}-->
-				<!--}"-->
-					<!--嵌套路由设置-->
-				<!--:to = "'index/newsDetails' + item.source_url"-->
-
 				<div class="news-item" v-for="(item,index) in newsData"
 					tag='li'
 					:key='index'
 				>
 					<router-link class="news-title" 
 					:to ='{
-						path: "/newsDetails" + item.source_url,
+						path: "/newsDetails",
 						query:{
-							newsItem:JSON.stringify(item)
+							item: JSON.stringify(item)
 						}
 					}'
 					v-html="item.content"></router-link>
-					<!-- <ul class="img-wrapper" v-if="item.image_list">
-						<li v-for="(item,index) in item.image_list">
-							<img v-lazy="item['url']"  alt="">
-						</li>
-					</ul> -->
 					<div class="bottom-title">
 						<span class="writer">{{ item.username }}</span> &nbsp;&nbsp;
 						<span class="icon" :class="{ 'women-icon': item.sex === 1, 'man-icon': item.sex === 2 }">{{ item.comment_count }}</span>

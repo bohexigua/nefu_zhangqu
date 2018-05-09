@@ -9,4 +9,6 @@ router.get('/getIssue', issue.getIssue)
 
 router.post('/addPraise', issue.addPraise)
 
+router.get('/addIssuePv', issue.addIssuePv)
+
 module.exports = router

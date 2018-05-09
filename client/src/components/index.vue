@@ -46,7 +46,7 @@
 					:key='index'
 				>
 
-					<div class="news-title" v-html="item.issue_content"></div>
+					<div class="news-title" v-html="item.content"></div>
 					<ul class="img-wrapper" v-if="item.image_list">
 						<li v-for="(item,index) in item.image_list">
 							<!-- :src="item['url']" -->
@@ -54,10 +54,9 @@
 						</li>
 					</ul>
 					<div class="bottom-title">
-						<span class="avIcon" v-show="item.label==='广告'">广告</span>
-						<span class="writer">{{ item.media_name ||  }}</span> &nbsp;&nbsp;
-						<span class="comment_count">评论&nbsp;{{item.comment_count}}</span>
-						<span class="datetime">{{ item.issue_date }}</span>
+						<span class="writer">{{ item.username }}</span> &nbsp;&nbsp;
+						<span class="sex-icon" :class="{ 'women-icon': item.sex === 1, 'man-icon': item.sex === 2 }">{{ item.comment_count }}</span>
+						<span class="datetime">{{ item.date }}</span>
 					</div>
 				</router-link>
 
@@ -83,6 +82,7 @@
 	import { ajax } from "../common/request";
 	import BScroll from "better-scroll";
 	import toTop from "../components/toTop";
+	import { formatDate, delay } from '../common/util'
 
 	export default {
 		name: "index",
@@ -114,8 +114,20 @@
 			request(key, fn) {
 				ajax('/issue/getIssue')
 				.then(res => {
-					this.newsData = res.data;
-					console.log(newsData);
+					const newsData = res.data.data.map((value, index, arr) => {
+						const result = {};
+						if (value.issue_anonymous) {
+							result.username = '匿名：某同学';
+						} else {
+							result.username = value.user_name;
+						}
+						result.date = formatDate(value.issue_date)
+						result.praise = value.issue_praise;
+						result.sex = value.user_sex;
+						result.content = value.issue_content;
+						return result;
+					});
+					this.newsData = newsData;
 					this.$nextTick(() => {
 						this.news_scroll && this.news_scroll.refresh();
 						fn && fn();
@@ -364,12 +376,22 @@
 						font-size: 10px;
 						color: #b5b5b5;
 						margin-top: 8px;
-						.avIcon {
-							color: #2a90d7;
-							border: 1px solid rgba(42, 144, 215, 0.5);
-							border-radius: 2px;
-							font-size: 8px;
-							padding: 0 2px;
+						.sex-icon {
+							display: inline-block;
+							width: 15px;
+							height: 15px;
+							background-size: 100% 100%;
+							background-repeat: no-repeat;
+							transform: translateY(3px);
+						}
+						.man-icon {
+							background-image: url('../assets/man.png');
+						}
+						.women-icon {
+							background-image: url('../assets/women.png');
+						}
+						.datetime {
+							margin-left: 10px;
 						}
 					}
 				}

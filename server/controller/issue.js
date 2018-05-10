@@ -98,11 +98,26 @@ const addComment = async (ctx, next) => {
   ctx.response.body = JSON.stringify(result);
 }
 
+const searchIssue = async (ctx, next) => {
+  const form = ctx.request.body;
+  const keyWord = form.keyWord;
+  const res = await issue_models.searchIssue(keyWord);
+  const result = { success: true };
+  if (!res.length) {
+    result.success = false;
+    result.reason = '对不起，没有查询到相关记录';
+  } else {
+    result.data = res;
+  }
+  ctx.response.body = JSON.stringify(result);
+}
+
 module.exports = {
   setIssue: setIssue,
   getIssue: getIssue,
   addPraise: addPraise,
   addIssuePv: addIssuePv,
   getComment: getComment,
-  addComment: addComment
+  addComment: addComment,
+  searchIssue: searchIssue
 }

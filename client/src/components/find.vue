@@ -1,6 +1,6 @@
 <template>
   <div id="find">
-		<h3 class="find-title"> 寻找你最喜欢的那位 </h3>
+		<img src="../assets/find_title.png" alt="" class="find-title">
 		<article class="find-content">
 			<p> &nbsp;&nbsp;我们提供东北林业大学在校师生的 18000+ 张人脸库，覆盖了2010 - 2016级的全体师生。 </p>
 			<p> &nbsp;&nbsp;你可以上传你心目中男神女神的模样，寻找一位你最心动的同学。 </p>
@@ -125,15 +125,15 @@ export default {
 			}
 		}
 		.find-title {
-			margin-top: 10px;
-			font-size: 18px;
-			font-weight: bolder;
+			width: 90%;
+			margin-top: 15px;
 		}
 		.find-content {
 			text-align: left;
 			margin-left: 15px;
 			margin-right: 15px;
 			font-size: 15px;
+			color: rgba(23, 139, 223, 1);
 			p {
 				margin-top: 10px;
 			}

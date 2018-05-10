@@ -15,4 +15,6 @@ router.get('/getComment', issue.getComment)
 
 router.post('/addComment', issue.addComment)
 
+router.post('/searchIssue', issue.searchIssue)
+
 module.exports = router

@@ -4,13 +4,14 @@ const issuePv_models = require('../models/issuePv');
 const comment_models = require('../models/comment');
 const util = require('../common/util');
 const getSimnet = require('../common/issueSimnet');
+const iconv = require('iconv-lite');
 
 const recallIssue = async (session) => {
   const result = [];
   const issueNoLogin = await issue_models.getIssueNoLogin();
   if (session) {                                  // 已登录
     const username = session.user_no;
-    const issuePv = await issue_models.get3IssuePv(username);
+    const issuePv = await issuePv_models.get3IssuePv(username);
     for (let i = 0; i < issuePv.length; i++) {
       let item = issuePv[i];
       result.push({
@@ -35,13 +36,14 @@ const sortIssue = async (issueInfo, session) => {
   const text1 = await recallIssue(session);
   for (let i = 0; i < issueInfo.length; i++) {
     let item = issueInfo[i];
-    let text2 = item.issue_content;
-    const res = await getSimnet(text1, text2);
+    let text2 = util.delHtmlTag(item.issue_content);
+    const res = await getSimnet(iconv.encode(text1, 'gbk').toString('binary'),
+      iconv.encode(text2, 'gbk').toString('binary'));
     issueInfo[i].score = res.score;
   }
-  issueInfo.sort((a, b) => {
+  await issueInfo.sort((a, b) => {
     return a.score > b.score;
-  })
+  });
   return issueInfo;
 }
 
@@ -59,9 +61,10 @@ const setIssue = async (ctx, next) => {
   ctx.response.body = JSON.stringify(result);
 }
 
-const getIssue = async (ctx, next) => {
+const getIssueRecommend = async (ctx, next) => {
   const session = ctx.session.user;
-  const issueInfo = await issue_models.getIssue(12);
+  const lastDate = ctx.request.query.lastDate;
+  const issueInfo = await issue_models.getIssue(lastDate, 8);
   const result = { success: true }
   if (!issueInfo.length) {
     result.success = false;
@@ -70,10 +73,25 @@ const getIssue = async (ctx, next) => {
     return;
   }
   result.lastDate = issueInfo[issueInfo.length - 1].issue_date;
-  console.log(sortIssue(issueInfo, session));
-  // result.data = sortIssue(issueInfo, session).splice(0, 10);
+  result.data = await sortIssue(issueInfo, session);
+  result.data = result.data.splice(0, 10);
   ctx.response.body = JSON.stringify(result);
 }
+
+const getIssue = async (ctx, next) => {                       // 仅为了首屏加载，解决推荐算法较慢的问题
+  const session = ctx.session.user;
+  const issueInfo = await issue_models.getIssue('2010-01-01', 8);
+  const result = { success: true }
+  if (!issueInfo.length) {
+    result.success = false;
+    result.reason = '暂无动态，请刷新重试';
+    ctx.response.body = JSON.stringify(result);
+    return;
+  }
+  result.lastDate = issueInfo[issueInfo.length - 1].issue_date;
+  result.data = issueInfo;
+  ctx.response.body = JSON.stringify(result);
+} 
 
 const addPraise = async (ctx, next) => {
   const session = ctx.session.user;
@@ -166,5 +184,6 @@ module.exports = {
   getComment: getComment,
   addComment: addComment,
   searchIssue: searchIssue,
-  recallIssue: recallIssue
+  recallIssue: recallIssue,
+  getIssueRecommend: getIssueRecommend
 }

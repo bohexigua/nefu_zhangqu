@@ -27,7 +27,7 @@ const requestSimnet = (text1, text2, accessToken) => {
 }
 
 const getSimnet = (text1, text2) => {
-  return getAccessToken()
+  return getAccessToken('language')
   .then(accessToken => {
     return requestSimnet(text1, text2, accessToken);
   });

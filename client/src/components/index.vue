@@ -76,6 +76,7 @@
 		},
 		data() {
 			return {
+				lastDate: '2010-01-01',
 				tab_title: [{ name: "推荐", key: "__all__" }],
 				prevkey: "", 																		//上一个选中的标签
 				isCur: 0, 																			//当前点击的tab页
@@ -101,10 +102,13 @@
 				this.$router.push("/search");
 			},
 
-			request(fn) {
-				ajax('/issue/getIssue')
+			request(url = '/issue/getIssue', fn, isClean = false) {
+				url = url + '?lastDate=' + this.lastDate;
+				ajax(url)
 				.then(res => {
-					const newsData = res.data.data.map((value, index, arr) => {
+					this.lastDate = res.data.lastDate;
+					if (isClean) this.newsData = [];
+					res.data.data.map((value, index, arr) => {
 						const result = {};
 						if (value.issue_anonymous) {
 							result.username = '匿名：某同学';
@@ -117,9 +121,8 @@
 						result.sex = value.user_sex;
 						result.content = value.issue_content;
 						result.issueID = value.issue_id;
-						return result;
+						this.newsData.push(result);
 					});
-					this.newsData = newsData;
 					this.$nextTick(() => {
 						this.news_scroll && this.news_scroll.refresh();
 						fn && fn();
@@ -207,15 +210,16 @@
 					if (flagdown) {
 						console.log("flagdown");
 						flagdown = false;
-						self.request(() => {
+						self.request('/issue/getIssueRecommend', () => {
 							self.loadingShow = false;
-						});
+						}, true);
 					}
 
 					// 上啦加载，结束逻辑
 					if (flagup) {
 						console.log("flagup");
 						flagup = false;
+						self.request('/issue/getIssueRecommend');
 					}
 				});
 			},
@@ -230,7 +234,7 @@
 			$route(to, from, next) {}
 		},
 		created() {
-			this.request();
+			this.request();							// 首屏加载
 		},
 		mounted() {
 			this._initScroll();

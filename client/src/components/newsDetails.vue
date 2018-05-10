@@ -73,6 +73,24 @@
 				this.$router.push('/index');
 			},
 			publishComment() {
+				const content = this.commentContent;
+				const issueID = this.newsItem.issueID;
+				ajax('/issue/addComment', {
+					issueID: issueID,
+					content: content
+				}, 'post')
+				.then(res => {
+					console.log(res);
+					if (!res.data.success) {
+						alert(res.data.reason);
+						if (res.data.code && res.data.code === 2088) {
+							this.$router.push('/login');
+						}
+					} else {
+						this.commentContent = '';
+						getComment(this.newsItem.issueID, this);
+					}
+				})
 			},
 			changeUserPic(item) {
 				if (this.newsItem.anonymous === 1) {

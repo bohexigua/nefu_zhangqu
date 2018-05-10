@@ -8,6 +8,15 @@ const getComment = async (issueID) => {
   return res;
 }
 
+const setComment = async (issueID, username, content) => {
+  await client.startTransaction();
+  const sql = 'insert into comment (comment_id, issue_id, comment_user, comment_content) values (null, ?, ?, ?)';
+  const res = await client.executeTransaction(sql, [issueID, username, content]);
+  await client.stopTransaction();
+  return res;
+}
+
 module.exports = {
-  getComment: getComment
+  getComment: getComment,
+  setComment: setComment
 }

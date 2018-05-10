@@ -35,8 +35,17 @@ const searchIssue = async (keyWord) => {
   return res;
 }
 
+const getIssueNoLogin = async (limit = 3) => {
+  await client.startTransaction();
+  const sql = 'select * from issue order by issue_date desc limit ?';
+  const res = await client.executeTransaction(sql, [limit]);
+  await client.stopTransaction();
+  return res;
+}
+
 module.exports = {
   setIssue: setIssue,
   getIssue: getIssue,
-  searchIssue: searchIssue
+  searchIssue: searchIssue,
+  getIssueNoLogin: getIssueNoLogin
 }

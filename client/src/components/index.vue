@@ -226,26 +226,6 @@
 				console.log(item);
 			}
 		},
-		filters: {
-			date: function(time) {
-				if (!time) {
-					return "";
-				}
-				let time1 = new Date(time) - 0;
-				let time2 = new Date() - 0;
-				let time3 = time2 - time1;
-				let time4 = parseInt(time3 / 1000 / 60);
-				let time5;
-				if (time4 > 0) {
-					time5 = time4 + "分钟前";
-				} else if (time4 <= 0) {
-					time5 = "刚刚";
-				} else if (time4 > 60) {
-					time5 = parseInt(time4 / 60) + "时前";
-				}
-				return time5;
-			}
-		},
 		watch: {
 			$route(to, from, next) {}
 		},

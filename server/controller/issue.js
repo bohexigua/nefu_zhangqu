@@ -2,6 +2,48 @@ const issue_models = require('../models/issue');
 const praise_models = require('../models/praise');
 const issuePv_models = require('../models/issuePv');
 const comment_models = require('../models/comment');
+const util = require('../common/util');
+const getSimnet = require('../common/issueSimnet');
+
+const recallIssue = async (session) => {
+  const result = [];
+  const issueNoLogin = await issue_models.getIssueNoLogin();
+  if (session) {                                  // 已登录
+    const username = session.user_no;
+    const issuePv = await issue_models.get3IssuePv(username);
+    for (let i = 0; i < issuePv.length; i++) {
+      let item = issuePv[i];
+      result.push({
+        content: util.delHtmlTag(item.issue_content)
+      });
+    }
+  }
+  for (let i = result.length; i < 3; i++) {
+    let item = issueNoLogin[i];
+    result.push({
+      content: util.delHtmlTag(item.issue_content)
+    });
+  }
+  let resText = '';
+  for (let i = 0; i < 3; i++) {
+    resText += result[i].content;
+  }
+  return resText;
+}
+
+const sortIssue = async (issueInfo, session) => {
+  const text1 = await recallIssue(session);
+  for (let i = 0; i < issueInfo.length; i++) {
+    let item = issueInfo[i];
+    let text2 = item.issue_content;
+    const res = await getSimnet(text1, text2);
+    issueInfo[i].score = res.score;
+  }
+  issueInfo.sort((a, b) => {
+    return a.score > b.score;
+  })
+  return issueInfo;
+}
 
 const setIssue = async (ctx, next) => {
   const form = ctx.request.body;
@@ -19,13 +61,17 @@ const setIssue = async (ctx, next) => {
 
 const getIssue = async (ctx, next) => {
   const session = ctx.session.user;
-  const issueInfo = await issue_models.getIssue();
+  const issueInfo = await issue_models.getIssue(12);
   const result = { success: true }
   if (!issueInfo.length) {
     result.success = false;
     result.reason = '暂无动态，请刷新重试';
+    ctx.response.body = JSON.stringify(result);
+    return;
   }
-  result.data = issueInfo;
+  result.lastDate = issueInfo[issueInfo.length - 1].issue_date;
+  console.log(sortIssue(issueInfo, session));
+  // result.data = sortIssue(issueInfo, session).splice(0, 10);
   ctx.response.body = JSON.stringify(result);
 }
 
@@ -119,5 +165,6 @@ module.exports = {
   addIssuePv: addIssuePv,
   getComment: getComment,
   addComment: addComment,
-  searchIssue: searchIssue
+  searchIssue: searchIssue,
+  recallIssue: recallIssue
 }

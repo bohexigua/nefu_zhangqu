@@ -16,6 +16,15 @@ const setIssuePv = async (username, issueID) => {
   return res2;
 }
 
+const get3IssuePv = async (username, limit = 3) => {
+  await client.startTransaction();
+  const sql = 'select ip.*, i.issue_content from issue_pv ip, issue i where ip.pv_user = ? and i.issue_id = ip.pv_issue order by ip.pv_num desc limit ?';
+  const res = await client.executeTransaction(sql, [username, limit]);
+  await client.stopTransaction();
+  return res;
+}
+
 module.exports = {
-  setIssuePv: setIssuePv
+  setIssuePv: setIssuePv,
+  get3IssuePv: get3IssuePv
 }

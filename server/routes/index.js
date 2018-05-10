@@ -1,6 +1,7 @@
 const router = require('koa-router')()
 const campus = require('../controller/campus')
 const find = require('../controller/find')
+const issue = require('../controller/issue')
 
 router.get('/getNewsTest', campus.getNewsTest)
 
@@ -11,6 +12,8 @@ router.get('/createUserGroupTest', find.createUserGroupTest)
 router.get('/registerFaceTest', find.registerFaceTest)
 
 router.get('/getFaceTest', find.getFaceTest)
+
+router.get('/recallIssueTest', issue.recallIssue)
 
 router.get('/', async (ctx, next) => {
   await ctx.render('index', {

@@ -64,7 +64,7 @@ const setIssue = async (ctx, next) => {
 const getIssueRecommend = async (ctx, next) => {
   const session = ctx.session.user;
   const lastDate = ctx.request.query.lastDate;
-  const issueInfo = await issue_models.getIssue(lastDate, 8);
+  const issueInfo = await issue_models.getIssue(new Date(lastDate), 12);
   const result = { success: true }
   if (!issueInfo.length) {
     result.success = false;
@@ -72,15 +72,15 @@ const getIssueRecommend = async (ctx, next) => {
     ctx.response.body = JSON.stringify(result);
     return;
   }
-  result.lastDate = issueInfo[issueInfo.length - 1].issue_date;
+  result.lastDate = util.getMaxDate(issueInfo);
   result.data = await sortIssue(issueInfo, session);
-  result.data = result.data.splice(0, 10);
+  // result.data = result.data.splice(0, 12);
   ctx.response.body = JSON.stringify(result);
 }
 
 const getIssue = async (ctx, next) => {                       // 仅为了首屏加载，解决推荐算法较慢的问题
   const session = ctx.session.user;
-  const issueInfo = await issue_models.getIssue('2010-01-01', 8);
+  const issueInfo = await issue_models.getIssue(new Date(), 12);
   const result = { success: true }
   if (!issueInfo.length) {
     result.success = false;
@@ -88,7 +88,7 @@ const getIssue = async (ctx, next) => {                       // 仅为了首屏
     ctx.response.body = JSON.stringify(result);
     return;
   }
-  result.lastDate = issueInfo[issueInfo.length - 1].issue_date;
+  result.lastDate = util.getMaxDate(issueInfo);
   result.data = issueInfo;
   ctx.response.body = JSON.stringify(result);
 } 

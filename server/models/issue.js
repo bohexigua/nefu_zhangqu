@@ -8,12 +8,13 @@ const setIssue = async (username, content, anonymous) => {
   return res;
 }
 
-const getIssue = async (time = '2010-01-01', num = 15) => {                                  // 暂未加入推荐
+const getIssue = async (time, num = 15) => {                                  // 暂未加入推荐
+  console.log(time);
   await client.startTransaction();
   const sql = 'select i.*, ci.user_name, ci.user_sex, ci.user_college, count(p.praise_id) as issue_praise from issue as i \
     left join campus_info as ci on i.issue_user = ci.user_no \
     left join praise as p on p.issue_id = i.issue_id \
-    where i.issue_date > ? \
+    where unix_timestamp(i.issue_date) < unix_timestamp(?) \
     group by i.issue_id, ci.user_name, ci.user_sex, ci.user_college \
     order by i.issue_date desc \
     limit ?';

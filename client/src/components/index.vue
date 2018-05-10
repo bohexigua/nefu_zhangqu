@@ -76,7 +76,7 @@
 		},
 		data() {
 			return {
-				lastDate: '2010-01-01',
+				lastDate: new Date(),
 				tab_title: [{ name: "推荐", key: "__all__" }],
 				prevkey: "", 																		//上一个选中的标签
 				isCur: 0, 																			//当前点击的tab页
@@ -106,6 +106,7 @@
 				url = url + '?lastDate=' + this.lastDate;
 				ajax(url)
 				.then(res => {
+					if (!res.data.lastDate) return;
 					this.lastDate = res.data.lastDate;
 					if (isClean) this.newsData = [];
 					res.data.data.map((value, index, arr) => {
@@ -210,6 +211,7 @@
 					if (flagdown) {
 						console.log("flagdown");
 						flagdown = false;
+						self.lastDate = new Date();
 						self.request('/issue/getIssueRecommend', () => {
 							self.loadingShow = false;
 						}, true);
